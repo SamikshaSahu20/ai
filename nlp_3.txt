@@ -1,0 +1,90 @@
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+===================NLP POS TAGGING================
+#pip install nltk
+import nltk
+
+# Download necessary resources
+nltk.download('punkt')  # For tokenizing words in the sentence
+nltk.download('averaged_perceptron_tagger')  # For POS tagging
+
+
+def pos_tagging():
+    print("=== POS Tagging ===")
+    sentence = input("Enter a sentence for POS tagging: ")
+
+    # Tokenizing the sentence into words
+    words = nltk.word_tokenize(sentence)
+
+    # Tagging the tokens (words) with POS tags
+    tagged = nltk.pos_tag(words)
+
+    # Manually correcting common issues like proper names
+    corrected_tagged = []
+    for word, tag in tagged:
+        # Check if the word is capitalized and correct it if it's likely a proper noun
+        if word.istitle() and tag != 'NNP':  # If capitalized and not already tagged as NNP
+            corrected_tagged.append((word, 'NNP'))  # Treat as Proper Noun
+        else:
+            corrected_tagged.append((word, tag))
+
+    print("\n--- Corrected POS Tags ---")
+    for word, tag in corrected_tagged:
+        print(f"{word}: {tag}")
+
+
+# Running the function
+if __name__ == "__main__":
+    pos_tagging()
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+===================SIMILARITY================
+# Install scikit-learn:
+# pip install scikit-learn
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+# Function to calculate cosine similarity score
+def similarity_score():
+    # Taking input sentences from the user
+    text1 = input("Enter first sentence: ")
+    text2 = input("Enter second sentence: ")
+
+    # Create a TfidfVectorizer to convert sentences into term-frequency inverse document frequency (TF-IDF) matrix
+    tfidf = TfidfVectorizer()
+L
+    # Transform the sentences into a TF-IDF matrix
+    tfidf_matrix = tfidf.fit_transform([text1, text2])
+
+    # Calculate cosine similarity between the two sentences
+    score = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
+
+    # Print the similarity score
+    print(f"\n--- Cosine Similarity Score: {score:.4f}")
+
+
+# Running the function
+if __name__ == "__main__":
+    similarity_score()
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+===================SPELL CHECKER================
+# pip install nltk scikit-learn textblob
+# pip install textblob
+# python -m textblob.download_corpora
+
+from textblob import TextBlob
+
+def spell_checker():
+    print("=== Simple Spell Checker ===")
+    sentence = input("Enter a sentence to check spelling: ")
+    
+    blob = TextBlob(sentence)
+    corrected = blob.correct()
+    
+    print("\n--- Original Sentence ---")
+    print(sentence)
+    
+    print("\n--- Corrected Sentence ---")
+    print(corrected)
+
+if __name__ == "__main__":
+    spell_checker()
+
