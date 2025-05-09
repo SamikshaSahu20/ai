@@ -639,15 +639,14 @@ if __name__ == "__main__":
 ===================CSP Cryptarithematic================
 from itertools import permutations
 
+
 def is_valid_solution(words, result, assignments):
     def word_to_num(word):
         return int("".join(str(assignments[c]) for c in word))
-    
+
     total = sum(word_to_num(word) for word in words)
     return total == word_to_num(result)
 
-def word_to_number(word, assignments):
-    return int("".join(str(assignments[c]) for c in word))
 
 def solve_cryptarithmetic(words, result):
     unique_chars = set("".join(words + [result]))
@@ -662,29 +661,33 @@ def solve_cryptarithmetic(words, result):
     for perm in permutations(digits, len(letters)):
         assignments = dict(zip(letters, perm))
 
+        # Constraint propagation: leading letters can't be 0
         if any(assignments[fl] == 0 for fl in first_letters):
             continue
 
+        # Check if current assignment satisfies the equation
         if is_valid_solution(words, result, assignments):
             return assignments
+
     return None
+
 
 def print_solution(words, result, assignments):
     print("\nLetter to Digit Mapping:")
-    for letter in sorted(assignments):
-        print(f"{letter} = {assignments[letter]}")
-    
-    print("\nCryptarithmetic Format:\n")
+    for k in sorted(assignments):
+        print(f"{k} = {assignments[k]}")
 
-    max_len = max(len(word) for word in words + [result])
-    padded_words = [word.rjust(max_len) for word in words]
+    print("\nCryptarithmetic Problem:")
+    max_len = max(len(w) for w in words + [result])
+    padded_words = [w.rjust(max_len) for w in words]
     padded_result = result.rjust(max_len)
 
-    for word in padded_words[:-1]:
-        print("  " + " ".join(str(assignments[c]) if c != ' ' else ' ' for c in word))
+    for w in padded_words[:-1]:
+        print("  " + " ".join(str(assignments[c]) if c != ' ' else ' ' for c in w))
     print("+ " + " ".join(str(assignments[c]) if c != ' ' else ' ' for c in padded_words[-1]))
     print("-" * (2 * max_len + 1))
     print("  " + " ".join(str(assignments[c]) if c != ' ' else ' ' for c in padded_result))
+
 
 def main():
     expression = input("Enter cryptarithmetic expression (e.g., SEND + MORE = MONEY): ").replace(" ", "")
@@ -696,7 +699,6 @@ def main():
         left, result = expression.split('=')
         words = left.split('+')
         result = result.strip().upper()
-
         words = [w.strip().upper() for w in words]
 
         solution = solve_cryptarithmetic(words, result)
@@ -706,6 +708,7 @@ def main():
             print("No solution found.")
     except Exception as e:
         print("Error:", e)
+
 
 if __name__ == "__main__":
     main()
